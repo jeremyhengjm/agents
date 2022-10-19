@@ -1,1 +1,1 @@
-# Sequential Monte Carlo methods for agents-based models
+# Sequential Monte Carlo methods for SIS and SIR agents-based models
