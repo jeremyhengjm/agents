@@ -133,27 +133,27 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// multinomial_resampling
-IntegerVector multinomial_resampling(const NumericVector& weights, int ndraws);
-RcppExport SEXP _agents_multinomial_resampling(SEXP weightsSEXP, SEXP ndrawsSEXP) {
+// multinomial_resampling_cpp
+IntegerVector multinomial_resampling_cpp(const NumericVector& weights, int ndraws);
+RcppExport SEXP _agents_multinomial_resampling_cpp(SEXP weightsSEXP, SEXP ndrawsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const NumericVector& >::type weights(weightsSEXP);
     Rcpp::traits::input_parameter< int >::type ndraws(ndrawsSEXP);
-    rcpp_result_gen = Rcpp::wrap(multinomial_resampling(weights, ndraws));
+    rcpp_result_gen = Rcpp::wrap(multinomial_resampling_cpp(weights, ndraws));
     return rcpp_result_gen;
 END_RCPP
 }
-// systematic_resampling
-IntegerVector systematic_resampling(const NumericVector& weights, int ndraws);
-RcppExport SEXP _agents_systematic_resampling(SEXP weightsSEXP, SEXP ndrawsSEXP) {
+// systematic_resampling_cpp
+IntegerVector systematic_resampling_cpp(const NumericVector& weights, int ndraws);
+RcppExport SEXP _agents_systematic_resampling_cpp(SEXP weightsSEXP, SEXP ndrawsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const NumericVector& >::type weights(weightsSEXP);
     Rcpp::traits::input_parameter< int >::type ndraws(ndrawsSEXP);
-    rcpp_result_gen = Rcpp::wrap(systematic_resampling(weights, ndraws));
+    rcpp_result_gen = Rcpp::wrap(systematic_resampling_cpp(weights, ndraws));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -304,8 +304,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_agents_compute_qvalues_dpoibin", (DL_FUNC) &_agents_compute_qvalues_dpoibin, 1},
     {"_agents_dpoibin_cpp", (DL_FUNC) &_agents_dpoibin_cpp, 2},
     {"_agents_dpoibin_vectorized_cpp", (DL_FUNC) &_agents_dpoibin_vectorized_cpp, 2},
-    {"_agents_multinomial_resampling", (DL_FUNC) &_agents_multinomial_resampling, 2},
-    {"_agents_systematic_resampling", (DL_FUNC) &_agents_systematic_resampling, 2},
+    {"_agents_multinomial_resampling_cpp", (DL_FUNC) &_agents_multinomial_resampling_cpp, 2},
+    {"_agents_systematic_resampling_cpp", (DL_FUNC) &_agents_systematic_resampling_cpp, 2},
     {"_agents_sis_alpha_full", (DL_FUNC) &_agents_sis_alpha_full, 4},
     {"_agents_sis_alpha_net", (DL_FUNC) &_agents_sis_alpha_net, 5},
     {"_agents_sis_compute_infected_prob", (DL_FUNC) &_agents_sis_compute_infected_prob, 2},

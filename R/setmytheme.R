@@ -1,3 +1,7 @@
+#' @rdname setmytheme
+#' @title Set plotting theme
+#' @description Function to set plotting theme
+#' @export
 setmytheme <- function(){
   theme_set(theme_bw())
   theme_update(axis.text.x = element_text(size = 20),

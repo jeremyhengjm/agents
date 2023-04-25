@@ -4,7 +4,7 @@ using namespace Rcpp;
 using namespace std;  
 
 // [[Rcpp::export]]
-IntegerVector multinomial_resampling(const NumericVector & weights, int ndraws){
+IntegerVector multinomial_resampling_cpp(const NumericVector & weights, int ndraws){
   NumericVector cumsumw = cumsum(weights);
   IntegerVector ancestors(ndraws);
   NumericVector rand = runif(ndraws);
@@ -20,7 +20,7 @@ IntegerVector multinomial_resampling(const NumericVector & weights, int ndraws){
 }
 
 // [[Rcpp::export]]
-IntegerVector systematic_resampling(const NumericVector & weights, int ndraws){
+IntegerVector systematic_resampling_cpp(const NumericVector & weights, int ndraws){
   IntegerVector ancestors(ndraws);
   double rand = runif(1)[0];
   rand = rand / ndraws;

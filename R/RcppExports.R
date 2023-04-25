@@ -41,12 +41,12 @@ dpoibin_vectorized_cpp <- function(eval, alpha) {
     .Call('_agents_dpoibin_vectorized_cpp', PACKAGE = 'agents', eval, alpha)
 }
 
-multinomial_resampling <- function(weights, ndraws) {
-    .Call('_agents_multinomial_resampling', PACKAGE = 'agents', weights, ndraws)
+multinomial_resampling_cpp <- function(weights, ndraws) {
+    .Call('_agents_multinomial_resampling_cpp', PACKAGE = 'agents', weights, ndraws)
 }
 
-systematic_resampling <- function(weights, ndraws) {
-    .Call('_agents_systematic_resampling', PACKAGE = 'agents', weights, ndraws)
+systematic_resampling_cpp <- function(weights, ndraws) {
+    .Call('_agents_systematic_resampling_cpp', PACKAGE = 'agents', weights, ndraws)
 }
 
 sis_alpha_full <- function(X, I, lambda, gamma) {
