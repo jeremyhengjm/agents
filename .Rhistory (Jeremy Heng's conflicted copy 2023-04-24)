@@ -1,0 +1,512 @@
+results_df <- data.frame(time = 0:T,
+ess = bpf$ess * 100 / bpf_config$P,
+log_likelihood = bpf$log_likelihood,
+algorithm = rep("BPF", T+1))
+results_df <- rbind(results_df, data.frame(time = 0:T,
+ess = apf$ess * 100 / apf_config$P,
+log_likelihood = apf$log_likelihood,
+algorithm = rep("APF", T+1)))
+results_df <- rbind(results_df, data.frame(time = 0:T,
+ess = cpf$ess * 100 / cpf_config$P,
+log_likelihood = cpf$log_likelihood,
+algorithm = rep("CPF", T+1)))
+# plot ESS over time
+ggplot() + geom_line(data = results_df, aes(x = time, y = ess, color = algorithm)) +
+labs(x = "time", y = "ESS%") + scale_color_colorblind()
+# plot log-likelihood estimates over time
+ggplot() + geom_line(data = results_df, aes(x = time, y = log_likelihood, color = algorithm)) +
+labs(x = "time", y = "log-likelihood") + scale_color_colorblind()
+bif <- sis_bif(model_config, observations, conditional_expectation = "transpoi")
+# plot ESS over time
+ggplot() + geom_line(data = results_df, aes(x = time, y = ess, color = algorithm)) +
+labs(x = "time", y = "ESS%") + scale_color_colorblind()
+bif <- sis_bif(model_config, observations, conditional_expectation = "transpoi")
+bif
+bif <- sis_bif(model_config, observations, conditional_expectation = "transpoi")
+# run controlled particle filter
+cpf_config <- list(P = 2^7, store = FALSE, log_bif = bif$log_bif)
+cpf <- sis_cpf(model_config, observations, cpf_config)
+# collect particle filtering results
+results_df <- data.frame(time = 0:T,
+ess = bpf$ess * 100 / bpf_config$P,
+log_likelihood = bpf$log_likelihood,
+algorithm = rep("BPF", T+1))
+results_df <- rbind(results_df, data.frame(time = 0:T,
+ess = apf$ess * 100 / apf_config$P,
+log_likelihood = apf$log_likelihood,
+algorithm = rep("APF", T+1)))
+results_df <- rbind(results_df, data.frame(time = 0:T,
+ess = cpf$ess * 100 / cpf_config$P,
+log_likelihood = cpf$log_likelihood,
+algorithm = rep("CPF", T+1)))
+# plot ESS over time
+ggplot() + geom_line(data = results_df, aes(x = time, y = ess, color = algorithm)) +
+labs(x = "time", y = "ESS%") + scale_color_colorblind()
+# model configuration
+N <- 200
+alpha0 <- rep(0.1, N)
+lambda <- 0.25 * runif(N)
+# lambda <- rep(runif(1), N)
+gamma <- 0.25 * runif(N)
+# gamma <- rep(runif(1), N)
+network_type <- "full"
+rho <- 0.8
+rmeasurement <- function(I, rho){
+return(rbinom(n = 1, size = I, prob = rho))
+}
+dmeasurement <- function(y, I, rho){
+return(dbinom(x = as.numeric(y), size = I, prob = rho, log = TRUE))
+}
+model_config <- list(N = N,
+alpha0 = alpha0,
+lambda = lambda,
+gamma = gamma,
+network_type = network_type,
+rho = rho,
+rmeasurement = rmeasurement,
+dmeasurement = dmeasurement)
+# observations desired
+T <- 20
+observations <- list(T = T)
+# simulate SIS model
+sis_sample <- sis_simulate(model_config, observations)
+observations$y <- sis_sample$y
+# plot simulated sample
+sis_df <- data.frame(time = 0:T, infected = sis_sample$I, type = rep("latent", T+1))
+sis_df <- rbind(sis_df, data.frame(time = 0:T, infected = sis_sample$y, type = rep("observed", T+1)))
+ggplot() + geom_line(data = sis_df, aes(x = time, y = infected, color = type)) +
+labs(x = "time", y = "no. of infected") + scale_color_colorblind()
+# run bootstrap particle filter
+bpf_config <- list(P = 2^10, store = FALSE)
+bpf <- sis_bpf(model_config, observations, bpf_config)
+# run auxiliary particle filter
+apf_config <- list(P = 2^7, store = FALSE)
+apf <- sis_apf(model_config, observations, apf_config)
+# approximate backward information filter
+bif <- sis_bif(model_config, observations)
+bif
+# run controlled particle filter
+cpf_config <- list(P = 2^7, store = FALSE, log_bif = bif$log_bif)
+cpf <- sis_cpf(model_config, observations, cpf_config)
+# collect particle filtering results
+results_df <- data.frame(time = 0:T,
+ess = bpf$ess * 100 / bpf_config$P,
+log_likelihood = bpf$log_likelihood,
+algorithm = rep("BPF", T+1))
+results_df <- rbind(results_df, data.frame(time = 0:T,
+ess = apf$ess * 100 / apf_config$P,
+log_likelihood = apf$log_likelihood,
+algorithm = rep("APF", T+1)))
+results_df <- rbind(results_df, data.frame(time = 0:T,
+ess = cpf$ess * 100 / cpf_config$P,
+log_likelihood = cpf$log_likelihood,
+algorithm = rep("CPF", T+1)))
+# plot ESS over time
+ggplot() + geom_line(data = results_df, aes(x = time, y = ess, color = algorithm)) +
+labs(x = "time", y = "ESS%") + scale_color_colorblind()
+bif <- sis_bif(model_config, observations, conditional_expectation = "transpoi")
+bif
+# run controlled particle filter
+cpf_config <- list(P = 2^7, store = FALSE, log_bif = bif$log_bif)
+cpf <- sis_cpf(model_config, observations, cpf_config)
+# collect particle filtering results
+results_df <- data.frame(time = 0:T,
+ess = bpf$ess * 100 / bpf_config$P,
+log_likelihood = bpf$log_likelihood,
+algorithm = rep("BPF", T+1))
+results_df <- rbind(results_df, data.frame(time = 0:T,
+ess = apf$ess * 100 / apf_config$P,
+log_likelihood = apf$log_likelihood,
+algorithm = rep("APF", T+1)))
+results_df <- rbind(results_df, data.frame(time = 0:T,
+ess = cpf$ess * 100 / cpf_config$P,
+log_likelihood = cpf$log_likelihood,
+algorithm = rep("CPF", T+1)))
+# plot ESS over time
+ggplot() + geom_line(data = results_df, aes(x = time, y = ess, color = algorithm)) +
+labs(x = "time", y = "ESS%") + scale_color_colorblind()
+library(lmtest)
+install.packages('lmtest')
+library(lmtest)
+?lmtest:grangertest
+?lmtest::grangertest
+lmtest::grangertest
+print(lmtest:grangertest)
+print(lmtest::grangertest)
+body(lmtest::grangertest)
+getAnywhere(lmtest::grangertest)
+body(grangertest)
+edit(grangertest)
+View(grangertest)
+print.function(grangertest)
+edit(getAnywhere('grangertest'))
+debug('grangertest')
+grangertest()
+?chol
+A <- matrix((1,2,7,2,5,19,7,19,75),3,3)
+A <- matrix(c(1,2,7,2,5,19,7,19,75),3,3)
+A
+C <- chol(t(A))
+C
+t(C)
+C <- chol(A)
+C
+t(C)
+B <- t(C)
+B * t(B)
+B %*% t(B)
+B
+7+5
+2^5
+2^7
+2^6
+6 + 128 * 2 * (1/2)^7
+7/8
+5-7
+rm(list = ls())
+library(agents)
+library(ggplot2)
+library(ggthemes)
+setmytheme()
+# model configuration
+N <- 200
+devtools::load_all("~/Dropbox/AgentBasedModels/arxiv-v2/agents")
+rm(list = ls())
+library(agents)
+library(ggplot2)
+library(ggthemes)
+setmytheme()
+# model configuration
+N <- 200
+alpha0 <- rep(0.1, N)
+lambda <- 0.25 * runif(N)
+# lambda <- rep(runif(1), N)
+gamma <- 0.25 * runif(N)
+# gamma <- rep(runif(1), N)
+network_type <- "full"
+rho <- 0.8
+rmeasurement <- function(I, rho){
+return(rbinom(n = 1, size = I, prob = rho))
+}
+dmeasurement <- function(y, I, rho){
+return(dbinom(x = as.numeric(y), size = I, prob = rho, log = TRUE))
+}
+model_config <- list(N = N,
+alpha0 = alpha0,
+lambda = lambda,
+gamma = gamma,
+network_type = network_type,
+rho = rho,
+rmeasurement = rmeasurement,
+dmeasurement = dmeasurement)
+# observations desired
+T <- 20
+observations <- list(T = T)
+# simulate SIS model
+sis_sample <- sis_simulate(model_config, observations)
+observations$y <- sis_sample$y
+# plot simulated sample
+sis_df <- data.frame(time = 0:T, infected = sis_sample$I, type = rep("latent", T+1))
+sis_df <- rbind(sis_df, data.frame(time = 0:T, infected = sis_sample$y, type = rep("observed", T+1)))
+ggplot() + geom_line(data = sis_df, aes(x = time, y = infected, color = type)) +
+labs(x = "time", y = "no. of infected") + scale_color_colorblind()
+# run bootstrap particle filter
+bpf_config <- list(P = 2^10, store = FALSE)
+bpf <- sis_bpf(model_config, observations, bpf_config)
+# run auxiliary particle filter
+apf_config <- list(P = 2^7, store = FALSE)
+apf <- sis_apf(model_config, observations, apf_config)
+# approximate backward information filter
+bif <- sis_bif(model_config, observations)
+bif <- sis_bif(model_config, observations, conditional_expectation = "transpoi")
+# run controlled particle filter
+cpf_config <- list(P = 2^7, store = FALSE, log_bif = bif$log_bif)
+cpf <- sis_cpf(model_config, observations, cpf_config)
+# collect particle filtering results
+results_df <- data.frame(time = 0:T,
+ess = bpf$ess * 100 / bpf_config$P,
+log_likelihood = bpf$log_likelihood,
+algorithm = rep("BPF", T+1))
+results_df <- rbind(results_df, data.frame(time = 0:T,
+ess = apf$ess * 100 / apf_config$P,
+log_likelihood = apf$log_likelihood,
+algorithm = rep("APF", T+1)))
+results_df <- rbind(results_df, data.frame(time = 0:T,
+ess = cpf$ess * 100 / cpf_config$P,
+log_likelihood = cpf$log_likelihood,
+algorithm = rep("CPF", T+1)))
+# plot ESS over time
+ggplot() + geom_line(data = results_df, aes(x = time, y = ess, color = algorithm)) +
+labs(x = "time", y = "ESS%") + scale_color_colorblind()
+# plot log-likelihood estimates over time
+ggplot() + geom_line(data = results_df, aes(x = time, y = log_likelihood, color = algorithm)) +
+labs(x = "time", y = "log-likelihood") + scale_color_colorblind()
+rm(list = ls())
+library(agents)
+library(ggplot2)
+library(ggthemes)
+setmytheme()
+# model configuration
+N <- 200
+alpha0 <- rep(0.1, N)
+# lambda <- 0.25 * runif(N)
+lambda <- rep(runif(1), N)
+# gamma <- 0.25 * runif(N)
+gamma <- rep(runif(1), N)
+network_type <- "full"
+rho <- 0.8
+rmeasurement <- function(I, rho){
+return(rbinom(n = 1, size = I, prob = rho))
+}
+dmeasurement <- function(y, I, rho){
+return(dbinom(x = as.numeric(y), size = I, prob = rho, log = TRUE))
+}
+model_config <- list(N = N,
+alpha0 = alpha0,
+lambda = lambda,
+gamma = gamma,
+network_type = network_type,
+rho = rho,
+rmeasurement = rmeasurement,
+dmeasurement = dmeasurement)
+# observations desired
+T <- 20
+observations <- list(T = T)
+# simulate SIS model
+sis_sample <- sis_simulate(model_config, observations)
+observations$y <- sis_sample$y
+# plot simulated sample
+sis_df <- data.frame(time = 0:T, infected = sis_sample$I, type = rep("latent", T+1))
+sis_df <- rbind(sis_df, data.frame(time = 0:T, infected = sis_sample$y, type = rep("observed", T+1)))
+ggplot() + geom_line(data = sis_df, aes(x = time, y = infected, color = type)) +
+labs(x = "time", y = "no. of infected") + scale_color_colorblind()
+# run bootstrap particle filter
+bpf_config <- list(P = 2^10, store = FALSE)
+bpf <- sis_bpf(model_config, observations, bpf_config)
+# run auxiliary particle filter
+apf_config <- list(P = 2^7, store = FALSE)
+apf <- sis_apf(model_config, observations, apf_config)
+# approximate backward information filter
+bif <- sis_bif(model_config, observations)
+bif <- sis_bif(model_config, observations, conditional_expectation = "transpoi")
+# run controlled particle filter
+cpf_config <- list(P = 2^7, store = FALSE, log_bif = bif$log_bif)
+cpf <- sis_cpf(model_config, observations, cpf_config)
+# collect particle filtering results
+results_df <- data.frame(time = 0:T,
+ess = bpf$ess * 100 / bpf_config$P,
+log_likelihood = bpf$log_likelihood,
+algorithm = rep("BPF", T+1))
+results_df <- rbind(results_df, data.frame(time = 0:T,
+ess = apf$ess * 100 / apf_config$P,
+log_likelihood = apf$log_likelihood,
+algorithm = rep("APF", T+1)))
+results_df <- rbind(results_df, data.frame(time = 0:T,
+ess = cpf$ess * 100 / cpf_config$P,
+log_likelihood = cpf$log_likelihood,
+algorithm = rep("CPF", T+1)))
+# plot ESS over time
+ggplot() + geom_line(data = results_df, aes(x = time, y = ess, color = algorithm)) +
+labs(x = "time", y = "ESS%") + scale_color_colorblind()
+# plot log-likelihood estimates over time
+ggplot() + geom_line(data = results_df, aes(x = time, y = log_likelihood, color = algorithm)) +
+labs(x = "time", y = "log-likelihood") + scale_color_colorblind()
+rm(list = ls())
+library(agents)
+library(ggplot2)
+library(ggthemes)
+setmytheme()
+# model configuration
+N <- 200
+alpha0 <- rep(0.1, N)
+lambda <- 0.5 * runif(N)
+# lambda <- rep(runif(1), N)
+gamma <- 0.5 * runif(N)
+# gamma <- rep(runif(1), N)
+network_type <- "full"
+rho <- 0.8
+rmeasurement <- function(I, rho){
+return(rbinom(n = 1, size = I, prob = rho))
+}
+dmeasurement <- function(y, I, rho){
+return(dbinom(x = as.numeric(y), size = I, prob = rho, log = TRUE))
+}
+model_config <- list(N = N,
+alpha0 = alpha0,
+lambda = lambda,
+gamma = gamma,
+network_type = network_type,
+rho = rho,
+rmeasurement = rmeasurement,
+dmeasurement = dmeasurement)
+# observations desired
+T <- 20
+observations <- list(T = T)
+# simulate SIS model
+sis_sample <- sis_simulate(model_config, observations)
+observations$y <- sis_sample$y
+# plot simulated sample
+sis_df <- data.frame(time = 0:T, infected = sis_sample$I, type = rep("latent", T+1))
+sis_df <- rbind(sis_df, data.frame(time = 0:T, infected = sis_sample$y, type = rep("observed", T+1)))
+ggplot() + geom_line(data = sis_df, aes(x = time, y = infected, color = type)) +
+labs(x = "time", y = "no. of infected") + scale_color_colorblind()
+# run bootstrap particle filter
+bpf_config <- list(P = 2^10, store = FALSE)
+bpf <- sis_bpf(model_config, observations, bpf_config)
+# run auxiliary particle filter
+apf_config <- list(P = 2^7, store = FALSE)
+apf <- sis_apf(model_config, observations, apf_config)
+# approximate backward information filter
+bif <- sis_bif(model_config, observations)
+bif <- sis_bif(model_config, observations, conditional_expectation = "transpoi")
+# run controlled particle filter
+cpf_config <- list(P = 2^7, store = FALSE, log_bif = bif$log_bif)
+cpf <- sis_cpf(model_config, observations, cpf_config)
+# collect particle filtering results
+results_df <- data.frame(time = 0:T,
+ess = bpf$ess * 100 / bpf_config$P,
+log_likelihood = bpf$log_likelihood,
+algorithm = rep("BPF", T+1))
+results_df <- rbind(results_df, data.frame(time = 0:T,
+ess = apf$ess * 100 / apf_config$P,
+log_likelihood = apf$log_likelihood,
+algorithm = rep("APF", T+1)))
+results_df <- rbind(results_df, data.frame(time = 0:T,
+ess = cpf$ess * 100 / cpf_config$P,
+log_likelihood = cpf$log_likelihood,
+algorithm = rep("CPF", T+1)))
+# plot ESS over time
+ggplot() + geom_line(data = results_df, aes(x = time, y = ess, color = algorithm)) +
+labs(x = "time", y = "ESS%") + scale_color_colorblind()
+# plot log-likelihood estimates over time
+ggplot() + geom_line(data = results_df, aes(x = time, y = log_likelihood, color = algorithm)) +
+labs(x = "time", y = "log-likelihood") + scale_color_colorblind()
+rm(list = ls())
+library(agents)
+library(ggplot2)
+library(ggthemes)
+setmytheme()
+# model configuration
+N <- 1000
+alpha0 <- rep(0.1, N)
+lambda <- 0.5 * runif(N)
+# lambda <- rep(runif(1), N)
+gamma <- 0.5 * runif(N)
+# gamma <- rep(runif(1), N)
+network_type <- "full"
+rho <- 0.8
+rmeasurement <- function(I, rho){
+return(rbinom(n = 1, size = I, prob = rho))
+}
+dmeasurement <- function(y, I, rho){
+return(dbinom(x = as.numeric(y), size = I, prob = rho, log = TRUE))
+}
+model_config <- list(N = N,
+alpha0 = alpha0,
+lambda = lambda,
+gamma = gamma,
+network_type = network_type,
+rho = rho,
+rmeasurement = rmeasurement,
+dmeasurement = dmeasurement)
+# observations desired
+T <- 20
+observations <- list(T = T)
+# simulate SIS model
+sis_sample <- sis_simulate(model_config, observations)
+observations$y <- sis_sample$y
+# plot simulated sample
+sis_df <- data.frame(time = 0:T, infected = sis_sample$I, type = rep("latent", T+1))
+sis_df <- rbind(sis_df, data.frame(time = 0:T, infected = sis_sample$y, type = rep("observed", T+1)))
+ggplot() + geom_line(data = sis_df, aes(x = time, y = infected, color = type)) +
+labs(x = "time", y = "no. of infected") + scale_color_colorblind()
+# run bootstrap particle filter
+bpf_config <- list(P = 2^10, store = FALSE)
+bpf <- sis_bpf(model_config, observations, bpf_config)
+# run auxiliary particle filter
+apf_config <- list(P = 2^7, store = FALSE)
+apf <- sis_apf(model_config, observations, apf_config)
+# approximate backward information filter
+bif <- sis_bif(model_config, observations)
+rm(list = ls())
+library(agents)
+library(ggplot2)
+library(ggthemes)
+setmytheme()
+# model configuration
+N <- 1000
+alpha0 <- rep(0.1, N)
+lambda <- 0.5 * runif(N)
+# lambda <- rep(runif(1), N)
+gamma <- 0.5 * runif(N)
+# gamma <- rep(runif(1), N)
+network_type <- "full"
+rho <- 0.8
+rmeasurement <- function(I, rho){
+return(rbinom(n = 1, size = I, prob = rho))
+}
+dmeasurement <- function(y, I, rho){
+return(dbinom(x = as.numeric(y), size = I, prob = rho, log = TRUE))
+}
+model_config <- list(N = N,
+alpha0 = alpha0,
+lambda = lambda,
+gamma = gamma,
+network_type = network_type,
+rho = rho,
+rmeasurement = rmeasurement,
+dmeasurement = dmeasurement)
+# observations desired
+T <- 20
+observations <- list(T = T)
+# simulate SIS model
+sis_sample <- sis_simulate(model_config, observations)
+observations$y <- sis_sample$y
+# plot simulated sample
+sis_df <- data.frame(time = 0:T, infected = sis_sample$I, type = rep("latent", T+1))
+sis_df <- rbind(sis_df, data.frame(time = 0:T, infected = sis_sample$y, type = rep("observed", T+1)))
+ggplot() + geom_line(data = sis_df, aes(x = time, y = infected, color = type)) +
+labs(x = "time", y = "no. of infected") + scale_color_colorblind()
+# run bootstrap particle filter
+bpf_config <- list(P = 2^10, store = FALSE)
+bpf <- sis_bpf(model_config, observations, bpf_config)
+# run auxiliary particle filter
+apf_config <- list(P = 2^7, store = FALSE)
+apf <- sis_apf(model_config, observations, apf_config)
+# approximate backward information filter
+# bif <- sis_bif(model_config, observations)
+bif <- sis_bif(model_config, observations, conditional_expectation = "transpoi")
+# run controlled particle filter
+cpf_config <- list(P = 2^7, store = FALSE, log_bif = bif$log_bif)
+cpf <- sis_cpf(model_config, observations, cpf_config)
+# collect particle filtering results
+results_df <- data.frame(time = 0:T,
+ess = bpf$ess * 100 / bpf_config$P,
+log_likelihood = bpf$log_likelihood,
+algorithm = rep("BPF", T+1))
+results_df <- rbind(results_df, data.frame(time = 0:T,
+ess = apf$ess * 100 / apf_config$P,
+log_likelihood = apf$log_likelihood,
+algorithm = rep("APF", T+1)))
+results_df <- rbind(results_df, data.frame(time = 0:T,
+ess = cpf$ess * 100 / cpf_config$P,
+log_likelihood = cpf$log_likelihood,
+algorithm = rep("CPF", T+1)))
+# plot ESS over time
+ggplot() + geom_line(data = results_df, aes(x = time, y = ess, color = algorithm)) +
+labs(x = "time", y = "ESS%") + scale_color_colorblind()
+# plot log-likelihood estimates over time
+ggplot() + geom_line(data = results_df, aes(x = time, y = log_likelihood, color = algorithm)) +
+labs(x = "time", y = "log-likelihood") + scale_color_colorblind()
+# run bootstrap particle filter
+bpf_config <- list(P = 2^10, store = FALSE)
+bpf <- sis_bpf(model_config, observations, bpf_config)
+# run auxiliary particle filter
+apf_config <- list(P = 2^7, store = FALSE)
+apf <- sis_apf(model_config, observations, apf_config)
+# approximate backward information filter
+# bif <- sis_bif(model_config, observations)
+bif <- sis_bif(model_config, observations, conditional_expectation = "transpoi")
+# approximate backward information filter
+bif <- sis_bif(model_config, observations)
+renv::restore()

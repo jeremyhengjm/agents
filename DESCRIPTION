@@ -1,0 +1,13 @@
+Package: agents
+Type: Package
+Title: Sequential Monte Carlo algorithms for agent-based models
+Version: 1.0
+Date: 2019-02-18
+Author: Phyllis Ju, Jeremy Heng, Pierre Jacob
+Maintainer: Phyllis Ju <nianqiao@purdue.edu>
+Description: Sequential Monte Carlo algorithms for SIS and SIR agent-based models
+License: What license is it under?
+Imports: Rcpp (>= 1.0.0), RcppEigen (>= 0.3.3.5.0)
+LinkingTo: Rcpp, RcppEigen
+RoxygenNote: 7.2.3
+Encoding: UTF-8
