@@ -93,10 +93,20 @@ sis_apf <- function(model_config, observations, filter_config){
     log_poibin <- dpoibin(I_support, alpha) # M x P
     log_dmeasurement <- dmeasurement(y[t+1], I_support) # vector of size M 
     infected_transition <- sis_compute_infected_prob(log_poibin, log_dmeasurement) 
+    log_normconstant <- infected_transition$log_normconstant
+    I_zeros <- (I == 0)
+    if (any(I_zeros)){
+      index_zeros <- which(I_zeros)
+      if (I_support[1] == 0){
+        log_normconstant[index_zeros] <- log_dmeasurement[1]
+      } else{
+        log_normconstant[index_zeros] <- -Inf
+      }
+    }
     normprob <- infected_transition$normprob # M x P
     
     # compute weights and ESS
-    logweights <- infected_transition$log_normconstant # vector of size P
+    logweights <- log_normconstant # vector of size P
     maxlogweights <- max(logweights)
     weights <- exp(logweights - maxlogweights)
     normweights <- weights / sum(weights)

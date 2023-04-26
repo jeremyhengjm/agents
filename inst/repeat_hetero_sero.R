@@ -3,7 +3,7 @@ rm(list = ls())
 library(agents)
 
 # load simulated data
-load('inst/data_hetero_under.RData')
+load('inst/data_hetero_sero.RData')
 T <- observations$T
 
 # SIS model
@@ -13,9 +13,9 @@ link <- function(u) 1 / (1 + exp(-u))
 network_type <- 'full'
 beta_slopes <- c(0.125, 0.25, 0.5, 1.0)
 
-# observation model for under-reporting
-rho <- 0.8
-obs_model <- under_reporting_model(rho)
+# observation model for seroprevalence surveys
+sample_size <- ceiling(0.2 * N)
+obs_model <- seroprevalence_survey_model(sample_size, N)
 
 # number of repetitions
 num_repeats <- 100
@@ -92,7 +92,7 @@ for (slope in beta_slopes){
       cat('Slope:', slope, 'No. of particles:', P, 'Repetition:', r, '\n')
     }
   }
-  save('results', file = 'inst/results_hetero_under.RData')
+  save('results', file = 'inst/results_hetero_sero.RData')
 }
 
 

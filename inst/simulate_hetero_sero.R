@@ -19,9 +19,9 @@ beta_gamma <- c(-1, beta_slope)
 lambda <- link(beta_lambda[1] + beta_lambda[2] * covariates)
 gamma <- link(beta_gamma[1] + beta_gamma[2] * covariates)
 
-# observation model for under-reporting
-rho <- 0.8
-obs_model <- under_reporting_model(rho)
+# observation model for seroprevalence surveys
+sample_size <- ceiling(0.2 * N)
+obs_model <- seroprevalence_survey_model(sample_size, N)
 
 # model configuration
 model_config <- list(N = N, 
@@ -67,4 +67,4 @@ ggplot(gamma_df, aes(x = rate, fill = slope)) +
   labs(x = "recovery rate", y = "density")
 
 # save observations
-save("observations", "covariates", file ="inst/data_hetero_under.RData")
+save("observations", "covariates", file ="inst/data_hetero_sero.RData")
