@@ -103,6 +103,15 @@ sis_missing_apf <- function(model_config, observations, filter_config){
     infected_transition <- sis_compute_infected_prob(log_poibin, log_bif) 
     normprob <- infected_transition$normprob # M x P
     log_condexp_bif <- infected_transition$log_normconstant # vector of size P
+    I_zeros <- (I == 0)
+    if (any(I_zeros)){
+      index_zeros <- which(I_zeros)
+      if (I_support[1] == 0){
+        log_condexp_bif[index_zeros] <- log_bif[1]
+      } else{
+        log_condexp_bif[index_zeros] <- -Inf
+      }
+    }
     
     # compute controlled weights and ESS 
     log_dmeasurement <- dmeasurement(y[1], I) # vector of size P
@@ -157,6 +166,15 @@ sis_missing_apf <- function(model_config, observations, filter_config){
       infected_transition <- sis_compute_infected_prob(log_poibin, log_bif)
       normprob <- infected_transition$normprob # M x P
       log_condexp_bif <- infected_transition$log_normconstant # vector of size P
+      I_zeros <- (I == 0)
+      if (any(I_zeros)){
+        index_zeros <- which(I_zeros)
+        if (I_support[1] == 0){
+          log_condexp_bif[index_zeros] <- log_bif[1]
+        } else{
+          log_condexp_bif[index_zeros] <- -Inf
+        }
+      }
     } else{
       log_condexp_bif <- rep(0, P)
     }
